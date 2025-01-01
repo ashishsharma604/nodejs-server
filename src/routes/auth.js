@@ -24,7 +24,7 @@ router.post('/login', async (req, res) => {
 
     const token = generateToken(user.id);
 
-    res.json({ token });
+    res.json({ token, userId: user.id });
   } catch (err) {
     console.error('Database Error:', err); // Log database errors
     return res.status(500).json({ error: err.message });
