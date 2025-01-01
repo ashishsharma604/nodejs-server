@@ -6,7 +6,8 @@ const pool = require('../db');
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-
+  console.log('DB_HOST In:', process.env.DB_HOST);
+  console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
   try {
     const [results] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
 
@@ -24,7 +25,7 @@ router.post('/login', async (req, res) => {
 
     const token = generateToken(user.id);
 
-    res.json({ token });
+    res.json({ token, userId: user.id });
   } catch (err) {
     console.error('Database Error:', err); // Log database errors
     return res.status(500).json({ error: err.message });
