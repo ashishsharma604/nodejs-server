@@ -20,4 +20,7 @@ router.post('/user/:userId/restaurants', authenticate, restaurantsController.add
 router.delete('/user/:userId/restaurants/:restaurantId', authenticate, restaurantsController.deleteRestaurant);
 router.put('/:restaurantId/qr-code', authenticate, restaurantsController.updateQRCode);
 
+// New endpoint to update a menu item
+router.put('/:restaurantId/menu-categories/:categoryId/menu-items/:itemId', authenticate, restaurantsController.updateMenuItem);
+
 module.exports = router;

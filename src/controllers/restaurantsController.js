@@ -285,3 +285,41 @@ exports.addRestaurant = async (req, res) => {
    res.status(500).json({ error: 'Failed to update QR code' });
  }
 };
+
+
+exports.updateMenuItem = async (req, res) => {
+  const { categoryId, itemId } = req.params;
+  const { menu_item_name, menu_item_description, menu_item_price } = req.body;
+
+  console.log(`Updating menu item ${itemId} for category ${categoryId}`);
+
+  // Validate request payload
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log("Validation errors:", errors.array());
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    // Hardcode the image URL for now
+    const imageUrl = 'http://example.com/default-image.jpg';
+
+    // Update the menu item
+    const [result] = await pool.query(
+      'UPDATE menu_items SET name = ?, description = ?, price = ?, image_url = ? WHERE id = ? AND category_id = ?',
+      [menu_item_name, menu_item_description, menu_item_price, imageUrl, itemId, categoryId]
+    );
+
+    if (result.affectedRows === 0) {
+      console.log(`Menu item ${itemId} not found for category ${categoryId}`);
+      return res.status(404).json({ message: 'Menu item not found' });
+    }
+
+    console.log(`Updated menu item ${itemId} for category ${categoryId}`);
+
+    res.status(200).json({ message: 'Menu item updated successfully' });
+  } catch (err) {
+    console.error('Database Error:', err); // Log database errors
+    res.status(500).json({ error: 'Failed to update menu item' });
+  }
+};
