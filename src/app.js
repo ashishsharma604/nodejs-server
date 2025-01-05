@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const http = require('http'); // Use the http module
 const cors = require('cors'); // Import the cors middleware
 const routes = require('./routes');
 const authRoutes = require('./routes/auth');
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/api', routes);
 app.use('/auth', authRoutes);
 
-app.listen(port, '0.0.0.0', () => {
+// Create HTTP server
+http.createServer(app).listen(port, '0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
 });
