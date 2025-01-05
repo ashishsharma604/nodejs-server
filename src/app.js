@@ -1,10 +1,12 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const http = require('http'); // Use the http module
+const https = require('https');
 const cors = require('cors'); // Import the cors middleware
 const routes = require('./routes');
 const authRoutes = require('./routes/auth');
 const pool = require('./db'); // Import the pool from db.js
+const fs = require('fs');
+
 
 dotenv.config();
 
@@ -21,7 +23,14 @@ app.use(express.json());
 app.use('/api', routes);
 app.use('/auth', authRoutes);
 
-// Create HTTP server
-http.createServer(app).listen(port, '0.0.0.0', () => {
+console.log(__dirname)
+// Read SSL certificate and key from the same directory as nodejs-server
+const sslOptions = {
+  key: fs.readFileSync(__dirname + '/server.key'),
+  cert: fs.readFileSync(__dirname + '/server.cert')
+};
+
+// Create HTTPS server
+https.createServer(sslOptions, app).listen(port, '0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
 });
